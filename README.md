@@ -53,20 +53,29 @@ This will:
 
 ### 2. Improve a Prompt
 
+**Fast mode** (quick improvements):
 ```bash
-clavix improve "Create a login page"
+clavix fast "Create a login page"
+```
+
+**Deep mode** (comprehensive analysis):
+```bash
+clavix deep "Create a login page"
 ```
 
 Output:
 - Analysis of gaps and ambiguities
 - Structured prompt with clear sections
-- Actionable suggestions for improvement
+- Changes made summary
+- Smart triage recommendations (fast mode)
+- Alternative phrasings, edge cases, examples (deep mode)
 
 ### 3. Use Slash Commands (Claude Code)
 
 After initialization, use these commands in Claude Code:
 
-- `/clavix:improve [prompt]` - Improve a prompt
+- `/clavix:fast [prompt]` - Quick prompt improvements
+- `/clavix:deep [prompt]` - Comprehensive prompt analysis
 - `/clavix:prd` - Generate a PRD
 - `/clavix:start` - Start conversational mode
 - `/clavix:summarize` - Analyze conversation
@@ -87,19 +96,41 @@ Interactive prompts guide you through:
 - Slash command generation
 - Documentation injection
 
-### `clavix improve <prompt>`
+### `clavix fast <prompt>`
 
-Analyze and improve a prompt.
+Quick prompt improvements with smart triage.
 
 ```bash
-clavix improve "Build an API for user management"
+clavix fast "Build an API for user management"
 ```
 
-**Analysis includes:**
-- Gaps (missing context, success criteria, technical details)
-- Ambiguities (vague terms, unclear references)
-- Strengths (what's already clear)
-- Suggestions (actionable improvements)
+**Features:**
+- Fast analysis of gaps, ambiguities, strengths
+- Smart triage: recommends deep mode for complex prompts
+- "Already good" assessment for quality prompts
+- Changes made summary (educational)
+- Single structured improved prompt
+
+**Smart triage checks:**
+- Prompts < 20 characters
+- Missing 3+ critical elements
+- Vague scope words without context
+
+### `clavix deep <prompt>`
+
+Comprehensive prompt analysis.
+
+```bash
+clavix deep "Build an API for user management"
+```
+
+**Everything from fast mode PLUS:**
+- Alternative phrasings of requirements
+- Edge cases in requirements
+- Good/bad implementation examples
+- Multiple prompt structuring approaches
+- "What could go wrong" analysis
+- More thorough clarifying questions
 
 **Output:**
 - Structured prompt with sections:
@@ -108,6 +139,7 @@ clavix improve "Build an API for user management"
   - Technical Constraints
   - Expected Output
   - Success Criteria
+  - Plus all deep mode analysis sections
 
 ### `clavix prd`
 
@@ -229,16 +261,17 @@ your-project/
 ├── .clavix/
 │   ├── config.json         # Clavix configuration
 │   ├── INSTRUCTIONS.md     # Usage guide
-│   ├── sessions/           # Conversational mode sessions (Phase 2)
-│   ├── outputs/            # Generated PRDs and prompts (Phase 2)
+│   ├── sessions/           # Conversational mode sessions
+│   ├── outputs/            # Generated PRDs and prompts
 │   └── templates/          # Custom templates (optional)
 ├── AGENTS.md               # Updated with Clavix block
 ├── CLAUDE.md               # Updated with Clavix block (if Claude Code)
 └── .claude/commands/       # Generated slash commands (if Claude Code)
-    ├── clavix-improve.md
-    ├── clavix-prd.md
-    ├── clavix-start.md
-    └── clavix-summarize.md
+    ├── clavix:fast.md
+    ├── clavix:deep.md
+    ├── clavix:prd.md
+    ├── clavix:start.md
+    └── clavix:summarize.md
 ```
 
 ## Configuration
@@ -322,14 +355,42 @@ Build a secure user authentication login page
 In Claude Code:
 
 ```
-/clavix:improve Create a dashboard for analytics
+/clavix:fast Create a dashboard for analytics
 ```
 
 Claude will:
 1. Analyze your prompt
-2. Identify gaps and ambiguities
-3. Generate a structured, comprehensive prompt
-4. Display it ready for immediate use
+2. Check if deep analysis is needed (smart triage)
+3. Identify gaps, ambiguities, and strengths
+4. Show changes made summary
+5. Generate a structured, improved prompt
+6. Display it ready for immediate use
+
+For comprehensive analysis:
+
+```
+/clavix:deep Create a dashboard for analytics
+```
+
+Provides all fast mode features plus alternative phrasings, edge cases, implementation examples, and more.
+
+### Example 3: When to Use Which Mode
+
+**Use Fast Mode when:**
+- You have a simple, straightforward prompt
+- You need quick cleanup and structure
+- Time is a priority
+
+**Use Deep Mode when:**
+- Requirements are complex or ambiguous
+- You want to explore alternative approaches
+- You need to think through edge cases
+- You're planning a significant feature
+
+**Use PRD Mode when:**
+- You need strategic planning
+- Architecture decisions are required
+- Business impact and scalability matter
 
 ## Roadmap
 

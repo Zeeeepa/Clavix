@@ -69,7 +69,8 @@ describe('Init Workflow Integration', () => {
     expect(agentsFile).toContain('<!-- CLAVIX:START -->');
     expect(agentsFile).toContain('/clavix:prd');
     expect(claudeFile).toContain('<!-- CLAVIX:START -->');
-    expect(claudeFile).toContain('/clavix:improve');
+    expect(claudeFile).toContain('/clavix:fast');
+    expect(claudeFile).toContain('/clavix:deep');
   });
 
   it('should handle re-initialization correctly', async () => {

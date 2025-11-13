@@ -7,8 +7,12 @@ The current `/clavix-improve` command provides a one-size-fits-all approach that
 ## What Changes
 
 - **REMOVE** `/clavix-improve` command entirely (no backward compatibility needed - no current users)
-- **ADD** `/clavix-fast` command for quick prompt improvements with smart triage logic
-- **ADD** `/clavix-deep` command for comprehensive prompt analysis
+- **CHANGE** All slash commands to use colon notation (`:`) instead of dash notation (`-`)
+  - `/clavix-prd` → `/clavix:prd`
+  - `/clavix-start` → `/clavix:start`
+  - `/clavix-summarize` → `/clavix:summarize`
+- **ADD** `/clavix:fast` command for quick prompt improvements with smart triage logic
+- **ADD** `/clavix:deep` command for comprehensive prompt analysis
 - **ENHANCE** `PromptOptimizer` class to support dual modes (fast/deep) and smart triage
 - **ADD** Smart triage system that detects when prompts need deep analysis based on:
   - Prompt length < 20 characters
@@ -16,7 +20,7 @@ The current `/clavix-improve` command provides a one-size-fits-all approach that
   - Vague scope words ("app", "system", "repository", "project") without sufficient context
 - **ADD** "Already good" assessment that affirms quality prompts meeting 3/4 criteria
 - **ADD** "Changes Made" educational summary in both modes
-- **UPDATE** Documentation in README and AGENTS.md/CLAUDE.md to explain two modes
+- **UPDATE** Documentation in README and AGENTS.md/CLAUDE.md to explain two modes and colon notation
 
 ### Mode Comparison
 
@@ -57,15 +61,21 @@ The current `/clavix-improve` command provides a one-size-fits-all approach that
 - `src/cli/commands/fast.ts` - CREATE new command
 - `src/cli/commands/deep.ts` - CREATE new command
 - `src/core/prompt-optimizer.ts` - ENHANCE with mode support and triage logic
+- `.claude/commands/clavix-prd.md` - RENAME to `clavix:prd.md`
+- `.claude/commands/clavix-start.md` - RENAME to `clavix:start.md`
+- `.claude/commands/clavix-summarize.md` - RENAME to `clavix:summarize.md`
 - `.claude/commands/clavix-improve.md` - REMOVE
-- `.claude/commands/clavix-fast.md` - CREATE
-- `.claude/commands/clavix-deep.md` - CREATE
+- `.claude/commands/clavix:fast.md` - CREATE
+- `.claude/commands/clavix:deep.md` - CREATE
+- `src/templates/slash-commands/claude-code/clavix-prd.md` - RENAME to `clavix:prd.md`
+- `src/templates/slash-commands/claude-code/clavix-start.md` - RENAME to `clavix:start.md`
+- `src/templates/slash-commands/claude-code/clavix-summarize.md` - RENAME to `clavix:summarize.md`
 - `src/templates/slash-commands/claude-code/clavix-improve.md` - REMOVE
-- `src/templates/slash-commands/claude-code/clavix-fast.md` - CREATE
-- `src/templates/slash-commands/claude-code/clavix-deep.md` - CREATE
+- `src/templates/slash-commands/claude-code/clavix:fast.md` - CREATE
+- `src/templates/slash-commands/claude-code/clavix:deep.md` - CREATE
 - `tests/core/prompt-optimizer.test.ts` - UPDATE for mode support
 - `tests/integration/improve-workflow.test.ts` - RENAME and UPDATE for fast/deep modes
-- `README.md` - UPDATE documentation
+- `README.md` - UPDATE documentation with colon notation
 
 ### Migration Path
 

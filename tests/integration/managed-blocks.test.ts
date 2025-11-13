@@ -230,7 +230,8 @@ describe('Managed Block Injection Integration', () => {
 
       // Should have Clavix block with slash commands
       expect(fileContent).toContain('<!-- CLAVIX:START -->');
-      expect(fileContent).toContain('/clavix:improve');
+      expect(fileContent).toContain('/clavix:fast');
+      expect(fileContent).toContain('/clavix:deep');
       expect(fileContent).toContain('/clavix:prd');
     });
 

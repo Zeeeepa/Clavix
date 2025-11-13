@@ -97,7 +97,8 @@ export default class Init extends Command {
       console.log(chalk.gray('Next steps:'));
       console.log(chalk.gray('  • Slash commands are now available in your AI agent'));
       console.log(chalk.gray('  • Run'), chalk.cyan('clavix --help'), chalk.gray('to see all commands'));
-      console.log(chalk.gray('  • Try'), chalk.cyan('/clavix:improve'), chalk.gray('to optimize a prompt'));
+      console.log(chalk.gray('  • Try'), chalk.cyan('/clavix:fast'), chalk.gray('for quick prompt improvements'));
+      console.log(chalk.gray('  • Try'), chalk.cyan('/clavix:deep'), chalk.gray('for comprehensive prompt analysis'));
       console.log(chalk.gray('  • Use'), chalk.cyan('/clavix:prd'), chalk.gray('to generate a PRD\n'));
     } catch (error: any) {
       console.error(chalk.red('\n✗ Initialization failed:'), error.message);
@@ -147,7 +148,8 @@ Welcome to Clavix! This directory contains your local Clavix configuration and d
 ## Available Commands
 
 - \`clavix init\` - Initialize Clavix (you just ran this!)
-- \`clavix improve <prompt>\` - Improve a prompt directly
+- \`clavix fast <prompt>\` - Quick prompt improvements with smart triage
+- \`clavix deep <prompt>\` - Comprehensive prompt analysis
 - \`clavix prd\` - Generate a PRD through guided questions
 - \`clavix start\` - Start conversational mode
 - \`clavix summarize\` - Analyze conversation and extract prompt
@@ -158,10 +160,17 @@ Welcome to Clavix! This directory contains your local Clavix configuration and d
 
 If using Claude Code, the following slash commands are now available:
 
-- \`/clavix:improve [prompt]\` - Improve a prompt
+- \`/clavix:fast [prompt]\` - Quick prompt improvements
+- \`/clavix:deep [prompt]\` - Comprehensive prompt analysis
 - \`/clavix:prd\` - Generate a PRD
 - \`/clavix:start\` - Start conversational mode
 - \`/clavix:summarize\` - Summarize conversation
+
+## When to Use Which Mode
+
+- **Fast mode** (\`/clavix:fast\`): Quick cleanup for simple prompts
+- **Deep mode** (\`/clavix:deep\`): Comprehensive analysis for complex requirements
+- **PRD mode** (\`/clavix:prd\`): Strategic planning with architecture and business impact
 
 ## Customization
 

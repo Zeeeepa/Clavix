@@ -2,6 +2,8 @@
  * PromptOptimizer - Analyzes and improves prompts using rule-based analysis
  */
 
+export type OptimizerMode = 'fast' | 'deep';
+
 export interface PromptAnalysis {
   gaps: string[];
   ambiguities: string[];
@@ -9,10 +11,45 @@ export interface PromptAnalysis {
   suggestions: string[];
 }
 
+export interface TriageResult {
+  needsDeepAnalysis: boolean;
+  reasons: string[];
+}
+
+export interface QualityAssessment {
+  isAlreadyGood: boolean;
+  criteriaMetCount: number;
+  totalCriteria: number;
+  criteriaResults: {
+    clearGoal: boolean;
+    sufficientContext: boolean;
+    actionableLanguage: boolean;
+    reasonableScope: boolean;
+  };
+}
+
+export interface ChangesSummary {
+  changes: string[];
+}
+
 export interface ImprovedPrompt {
   original: string;
   analysis: PromptAnalysis;
   improved: string;
+  changesSummary?: ChangesSummary;
+  triageResult?: TriageResult;
+  qualityAssessment?: QualityAssessment;
+  alternativePhrasings?: string[];
+  edgeCases?: string[];
+  implementationExamples?: {
+    good: string[];
+    bad: string[];
+  };
+  alternativeStructures?: Array<{
+    structure: string;
+    benefits: string;
+  }>;
+  potentialIssues?: string[];
 }
 
 export class PromptOptimizer {
@@ -29,17 +66,84 @@ export class PromptOptimizer {
   }
 
   /**
-   * Generate an improved version of the prompt
+   * Perform smart triage to determine if deep analysis is recommended
    */
-  improve(prompt: string): ImprovedPrompt {
-    const analysis = this.analyze(prompt);
-    const improved = this.generateImprovedPrompt(prompt, analysis);
+  performTriage(prompt: string): TriageResult {
+    const reasons: string[] = [];
+
+    // Check 1: Short prompts (< 20 characters)
+    if (prompt.trim().length < 20) {
+      reasons.push('Prompt is very short (< 20 characters)');
+    }
+
+    // Check 2: Missing critical elements
+    const criticalElements = this.countMissingCriticalElements(prompt);
+    if (criticalElements >= 3) {
+      reasons.push(`Missing ${criticalElements} critical elements (context, tech stack, success criteria, user needs, expected output)`);
+    }
+
+    // Check 3: Vague scope words without context
+    if (this.hasVagueScopeWithoutContext(prompt)) {
+      reasons.push('Contains vague scope words ("app", "system", "project") without sufficient context');
+    }
 
     return {
+      needsDeepAnalysis: reasons.length > 0,
+      reasons,
+    };
+  }
+
+  /**
+   * Assess prompt quality
+   */
+  assessQuality(prompt: string): QualityAssessment {
+    const criteria = {
+      clearGoal: this.hasClearGoal(prompt),
+      sufficientContext: this.hasContext(prompt),
+      actionableLanguage: this.hasActionableLanguage(prompt),
+      reasonableScope: this.hasReasonableScope(prompt),
+    };
+
+    const metCount = Object.values(criteria).filter(Boolean).length;
+    const total = Object.keys(criteria).length;
+
+    return {
+      isAlreadyGood: metCount >= 3,
+      criteriaMetCount: metCount,
+      totalCriteria: total,
+      criteriaResults: criteria,
+    };
+  }
+
+  /**
+   * Generate an improved version of the prompt
+   */
+  improve(prompt: string, mode: OptimizerMode = 'fast'): ImprovedPrompt {
+    const analysis = this.analyze(prompt);
+    const improved = this.generateImprovedPrompt(prompt, analysis);
+    const changesSummary = this.generateChangesSummary(prompt, improved);
+    const triageResult = mode === 'fast' ? this.performTriage(prompt) : undefined;
+    const qualityAssessment = this.assessQuality(prompt);
+
+    const result: ImprovedPrompt = {
       original: prompt,
       analysis,
       improved,
+      changesSummary,
+      triageResult,
+      qualityAssessment,
     };
+
+    // Add deep mode features
+    if (mode === 'deep') {
+      result.alternativePhrasings = this.generateAlternativePhrasings(prompt);
+      result.edgeCases = this.identifyEdgeCases(prompt);
+      result.implementationExamples = this.generateImplementationExamples(prompt);
+      result.alternativeStructures = this.suggestAlternativeStructures(prompt);
+      result.potentialIssues = this.identifyPotentialIssues(prompt);
+    }
+
+    return result;
   }
 
   /**
@@ -244,5 +348,217 @@ export class PromptOptimizer {
 
   private extractOrInferSuccess(original: string): string {
     return '- Implementation matches requirements\n- All edge cases handled\n- Code is tested and documented\n- [Add specific success metrics]';
+  }
+
+  // New helper methods for mode support
+
+  /**
+   * Count missing critical elements
+   */
+  private countMissingCriticalElements(prompt: string): number {
+    let missing = 0;
+
+    if (!this.hasContext(prompt)) missing++;
+    if (!this.hasTechnicalDetails(prompt)) missing++;
+    if (!this.hasSuccessCriteria(prompt)) missing++;
+    if (!this.hasUserNeeds(prompt)) missing++;
+    if (!this.hasExpectedOutput(prompt)) missing++;
+
+    return missing;
+  }
+
+  /**
+   * Check for vague scope words without sufficient context
+   */
+  private hasVagueScopeWithoutContext(prompt: string): boolean {
+    const vagueScopeWords = /\b(app|system|repository|project|platform|solution|tool|service)\b/i;
+
+    if (!vagueScopeWords.test(prompt)) {
+      return false;
+    }
+
+    // Check if there's sufficient context
+    const hasSpecificPurpose = /\b(for|to|that|which|enables|allows|helps)\b.{10,}/i.test(prompt);
+    const hasTechStack = this.hasTechnicalDetails(prompt);
+    const hasDetailedRequirements = prompt.length > 100;
+
+    return !(hasSpecificPurpose && (hasTechStack || hasDetailedRequirements));
+  }
+
+  /**
+   * Check if prompt has a clear goal
+   */
+  private hasClearGoal(prompt: string): boolean {
+    const actionVerbs = /^(create|build|develop|implement|add|update|fix|refactor|design|make|write)\b/i;
+    return actionVerbs.test(prompt.trim()) || /objective|goal|purpose/i.test(prompt);
+  }
+
+  /**
+   * Check if prompt uses actionable language
+   */
+  private hasActionableLanguage(prompt: string): boolean {
+    const actionWords = /\b(create|build|implement|add|update|remove|fix|test|deploy|configure|setup)\b/i;
+    return actionWords.test(prompt);
+  }
+
+  /**
+   * Check if prompt has reasonable scope
+   */
+  private hasReasonableScope(prompt: string): boolean {
+    // Too vague (unreasonably broad)
+    const tooVague = /^(build an app|create a system|make a platform)$/i.test(prompt.trim());
+
+    // Too specific (unreasonably narrow)
+    const tooSpecific = prompt.length > 1000;
+
+    return !tooVague && !tooSpecific;
+  }
+
+  /**
+   * Generate changes summary
+   */
+  private generateChangesSummary(original: string, improved: string): ChangesSummary {
+    const changes: string[] = [];
+
+    if (!this.hasContext(original) && /# Objective/.test(improved)) {
+      changes.push('Added clear objective and context');
+    }
+
+    if (!this.hasTechnicalDetails(original) && /# Technical Constraints/.test(improved)) {
+      changes.push('Added technical constraints and requirements');
+    }
+
+    if (!this.hasSuccessCriteria(original) && /# Success Criteria/.test(improved)) {
+      changes.push('Defined measurable success criteria');
+    }
+
+    if (!this.hasExpectedOutput(original) && /# Expected Output/.test(improved)) {
+      changes.push('Specified expected deliverables');
+    }
+
+    if (original.length < 100 && improved.length > 100) {
+      changes.push('Expanded prompt with structured sections');
+    }
+
+    if (changes.length === 0) {
+      changes.push('Refined and structured the existing prompt');
+    }
+
+    return { changes };
+  }
+
+  /**
+   * Generate alternative phrasings (deep mode)
+   */
+  private generateAlternativePhrasings(prompt: string): string[] {
+    const phrasings: string[] = [];
+    const mainAction = prompt.match(/^(create|build|develop|implement|add)/i)?.[0] || 'Implement';
+
+    phrasings.push(`${mainAction} a solution that ${this.extractCoreRequirement(prompt)}`);
+    phrasings.push(`Design and implement ${this.extractCoreRequirement(prompt)}`);
+    phrasings.push(`Build a system to ${this.extractCoreRequirement(prompt)}`);
+
+    return phrasings.slice(0, 3);
+  }
+
+  /**
+   * Identify edge cases in requirements (deep mode)
+   */
+  private identifyEdgeCases(prompt: string): string[] {
+    const edgeCases: string[] = [];
+
+    if (/user|login|auth/i.test(prompt)) {
+      edgeCases.push('What happens when user is not authenticated?');
+      edgeCases.push('How to handle expired sessions?');
+    }
+
+    if (/api|endpoint|request/i.test(prompt)) {
+      edgeCases.push('How to handle network failures or timeouts?');
+      edgeCases.push('What validation is needed for input data?');
+    }
+
+    if (/form|input|data/i.test(prompt)) {
+      edgeCases.push('How to handle invalid or malformed input?');
+      edgeCases.push('What happens with empty or missing fields?');
+    }
+
+    if (edgeCases.length === 0) {
+      edgeCases.push('Consider error states and failure scenarios');
+      edgeCases.push('Think about boundary conditions and limits');
+    }
+
+    return edgeCases;
+  }
+
+  /**
+   * Generate implementation examples (deep mode)
+   */
+  private generateImplementationExamples(prompt: string): { good: string[]; bad: string[] } {
+    return {
+      good: [
+        'Clear, specific requirements with measurable outcomes',
+        'Includes context about why this is needed',
+        'Specifies technical constraints and success criteria',
+      ],
+      bad: [
+        'Vague requirements without context',
+        'No success criteria or expected output',
+        'Missing technical constraints and user perspective',
+      ],
+    };
+  }
+
+  /**
+   * Suggest alternative prompt structures (deep mode)
+   */
+  private suggestAlternativeStructures(prompt: string): Array<{ structure: string; benefits: string }> {
+    return [
+      {
+        structure: 'User Story Format: As a [user], I want [goal] so that [benefit]',
+        benefits: 'Focuses on user needs and value delivery',
+      },
+      {
+        structure: 'Job Story Format: When [situation], I want to [motivation], so I can [expected outcome]',
+        benefits: 'Emphasizes context and outcomes over personas',
+      },
+      {
+        structure: 'Structured Sections: Objective, Requirements, Constraints, Success Criteria',
+        benefits: 'Provides clear organization and comprehensive coverage',
+      },
+    ];
+  }
+
+  /**
+   * Identify potential issues with the prompt (deep mode)
+   */
+  private identifyPotentialIssues(prompt: string): string[] {
+    const issues: string[] = [];
+
+    if (prompt.length < 30) {
+      issues.push('Prompt may be too vague - could be interpreted in multiple ways');
+    }
+
+    if (!this.hasSuccessCriteria(prompt)) {
+      issues.push('Without success criteria, it will be hard to know when the task is complete');
+    }
+
+    if (!this.hasTechnicalDetails(prompt)) {
+      issues.push('Missing technical details may lead to incorrect technology choices');
+    }
+
+    if (!this.hasUserNeeds(prompt)) {
+      issues.push('Without user perspective, solution may not meet actual needs');
+    }
+
+    return issues;
+  }
+
+  /**
+   * Extract core requirement from prompt
+   */
+  private extractCoreRequirement(prompt: string): string {
+    // Remove action verbs and extract the core requirement
+    const cleaned = prompt.replace(/^(create|build|develop|implement|add|update|fix)\s+/i, '');
+    return cleaned.split('.')[0] || cleaned.substring(0, 100);
   }
 }

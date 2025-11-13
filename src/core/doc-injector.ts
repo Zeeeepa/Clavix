@@ -208,10 +208,16 @@ This file contains instructions for AI agents working with this project.
 
 Clavix is installed in this project. Use the following slash commands:
 
+- \`/clavix:fast [prompt]\` - Quick prompt improvements with smart triage
+- \`/clavix:deep [prompt]\` - Comprehensive prompt analysis
 - \`/clavix:prd\` - Generate a PRD through guided questions
-- \`/clavix:improve [prompt]\` - Improve a prompt directly
 - \`/clavix:start\` - Start conversational mode for iterative refinement
 - \`/clavix:summarize\` - Extract optimized prompt from conversation
+
+**When to use:**
+- **Fast mode**: Quick cleanup for simple prompts
+- **Deep mode**: Comprehensive analysis for complex requirements
+- **PRD mode**: Strategic planning with architecture and business impact
 
 For more information, run \`clavix --help\` in your terminal.
 <!-- CLAVIX:END -->
@@ -229,17 +235,25 @@ For more information, run \`clavix --help\` in your terminal.
 
 This project uses Clavix for prompt improvement and PRD generation. The following slash commands are available:
 
+### /clavix:fast [prompt]
+Quick prompt improvements with smart triage. Clavix will analyze your prompt and recommend deep analysis if needed. Perfect for making "shitty prompts good" quickly.
+
+### /clavix:deep [prompt]
+Comprehensive prompt analysis with alternative phrasings, edge cases, implementation examples, and potential issues. Use for complex requirements or when you want thorough exploration.
+
 ### /clavix:prd
 Launch the PRD generation workflow. Clavix will guide you through strategic questions and generate both a comprehensive PRD and a quick-reference version optimized for AI consumption.
-
-### /clavix:improve [prompt]
-Analyze and improve a prompt directly. Provide your prompt as an argument, and Clavix will identify gaps, ambiguities, and generate a structured, development-ready version.
 
 ### /clavix:start
 Enter conversational mode for iterative prompt development. Discuss your requirements naturally, and later use \`/clavix:summarize\` to extract an optimized prompt.
 
 ### /clavix:summarize
 Analyze the current conversation and extract key requirements into a structured prompt and mini-PRD.
+
+**When to use which mode:**
+- **Fast mode** (\`/clavix:fast\`): Quick cleanup for simple prompts
+- **Deep mode** (\`/clavix:deep\`): Comprehensive analysis for complex requirements
+- **PRD mode** (\`/clavix:prd\`): Strategic planning with architecture and business impact
 
 **Pro tip**: Start complex features with \`/clavix:prd\` or \`/clavix:start\` to ensure clear requirements before implementation.
 <!-- CLAVIX:END -->

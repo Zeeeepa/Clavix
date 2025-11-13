@@ -71,7 +71,7 @@ The system SHALL provide a fast command to quickly improve prompts with smart tr
 - **AND** NOT include strategic analysis, detailed explanations, or alternative phrasings
 
 #### Scenario: Slash command integration for fast mode
-- **WHEN** user runs `/clavix-fast` in Claude Code with a prompt
+- **WHEN** user runs `/clavix:fast` in Claude Code with a prompt
 - **THEN** Claude Code SHALL pass the prompt to `clavix fast` command
 - **AND** display the improved prompt in the conversation
 
@@ -140,7 +140,7 @@ The system SHALL provide a comprehensive deep analysis command for thorough prom
 - **AND** group questions by category (requirements, constraints, success criteria)
 
 #### Scenario: Slash command integration for deep mode
-- **WHEN** user runs `/clavix-deep` in Claude Code with a prompt
+- **WHEN** user runs `/clavix:deep` in Claude Code with a prompt
 - **THEN** Claude Code SHALL pass the prompt to `clavix deep` command
 - **AND** display the comprehensive analysis in the conversation
 
@@ -192,41 +192,46 @@ The system SHALL implement smart triage logic to recommend appropriate analysis 
 
 ### Requirement: Slash Command File Generation
 
-The system SHALL generate slash command files for Claude Code integration, including fast and deep mode commands.
+The system SHALL generate slash command files for Claude Code integration using colon notation, including fast and deep mode commands.
 
-#### Scenario: Generate clavix-prd command
+#### Scenario: Generate clavix:prd command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST create `.claude/commands/clavix-prd.md`
+- **THEN** the system MUST create `.claude/commands/clavix:prd.md`
 - **AND** the file MUST contain a description field
 - **AND** the file MUST include instructions for launching PRD generation
 
-#### Scenario: Generate clavix-fast command
+#### Scenario: Generate clavix:fast command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST create `.claude/commands/clavix-fast.md`
+- **THEN** the system MUST create `.claude/commands/clavix:fast.md`
 - **AND** the file MUST accept `$ARGUMENTS` for the prompt to improve
 - **AND** the file MUST include fast mode instructions
 - **AND** the file MUST explain smart triage behavior
 
-#### Scenario: Generate clavix-deep command
+#### Scenario: Generate clavix:deep command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST create `.claude/commands/clavix-deep.md`
+- **THEN** the system MUST create `.claude/commands/clavix:deep.md`
 - **AND** the file MUST accept `$ARGUMENTS` for the prompt to improve
 - **AND** the file MUST include deep mode comprehensive analysis instructions
 - **AND** the file MUST explain when to use deep vs. fast mode
 
-#### Scenario: Generate clavix-start command
+#### Scenario: Generate clavix:start command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST create `.claude/commands/clavix-start.md`
+- **THEN** the system MUST create `.claude/commands/clavix:start.md`
 - **AND** the file MUST include instructions to begin conversational mode
 
-#### Scenario: Generate clavix-summarize command
+#### Scenario: Generate clavix:summarize command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST create `.claude/commands/clavix-summarize.md`
+- **THEN** the system MUST create `.claude/commands/clavix:summarize.md`
 - **AND** the file MUST include instructions to analyze and optimize the conversation
 
-#### Scenario: Do NOT generate clavix-improve command
+#### Scenario: Use colon notation for all slash commands
+- **WHEN** generating slash command files
+- **THEN** all filenames MUST use colon notation (e.g., `clavix:prd.md`, `clavix:fast.md`)
+- **AND** NOT use dash notation (e.g., NOT `clavix-prd.md`)
+
+#### Scenario: Do NOT generate clavix:improve or clavix-improve command
 - **WHEN** user completes initialization with Claude Code selected
-- **THEN** the system MUST NOT create `.claude/commands/clavix-improve.md`
+- **THEN** the system MUST NOT create `.claude/commands/clavix-improve.md` or `.claude/commands/clavix:improve.md`
 - **AND** MUST create fast and deep mode commands instead
 
 #### Scenario: Create commands directory if missing
