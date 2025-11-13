@@ -15,27 +15,70 @@ AI-assisted development tools produce better code when given better prompts. How
 
 ## Features
 
-### Phase 1 (MVP) ✅ Complete
+### 🎯 Prompt Engineering
 
-- ✅ **Global CLI tool** - Install once, use everywhere
-- ✅ **Prompt improvement** - Analyze and enhance prompts directly
-- ✅ **Claude Code integration** - Slash commands in your AI agent
-- ✅ **Managed documentation** - Auto-inject into AGENTS.md and CLAUDE.md
-- ✅ **Template system** - Customizable templates for your workflow
+- **Fast Mode** - Quick prompt improvements with smart triage system that detects when deep analysis is needed
+- **Deep Mode** - Comprehensive analysis with alternative phrasings, edge cases, implementation examples, and potential issues
+- **Rule-based Analysis Engine** - Identifies gaps (missing context, success criteria, technical details), ambiguities (vague terms, undefined scope), and strengths
 
-### Phase 2 (Core Workflows) ✅ Complete
+### 📋 PRD Generation
 
-- ✅ **PRD generation** - Guided Socratic questioning workflow
-- ✅ **Conversational mode** - Iterative prompt development
-- ✅ **Session management** - Track and organize conversations
-- ✅ **Analysis tools** - Extract optimized prompts from conversations
-- ✅ **Additional commands** - list, show, config, update
+- **Interactive Workflow** - Guided Socratic questioning with sequential and conditional flows
+- **Answer Validation** - Built-in validation for length, patterns, email, URLs, and custom requirements
+- **Dual Output Format** - Comprehensive team PRD (`full-prd.md`) + condensed AI-ready version (`quick-prd.md`)
+- **Handlebars Templates** - Fully customizable PRD formats with template override support
+
+### 💬 Conversational Mode
+
+- **Session Management** - Track conversations with UUID-based sessions, metadata, tags, and status tracking
+- **Message History** - Complete conversation logs with user/assistant role tracking
+- **Analysis Tools** - Extract requirements, identify constraints, define success criteria, and generate mini-PRDs from natural conversations
+- **Search & Filter** - Find sessions by project, agent, status, tags, keywords, or date range
+
+### 🤖 AI Agent Integration
+
+- **Claude Code Support** - Slash commands (`/clavix:fast`, `/clavix:deep`, `/clavix:prd`, `/clavix:start`, `/clavix:summarize`) with auto-detection
+- **Managed Documentation** - Auto-inject and update instructions in `AGENTS.md` and `CLAUDE.md` with safe managed blocks
+- **Extensible Architecture** - Adapter pattern ready for future Cursor, Windsurf, and other agent integrations
+
+### ⚙️ Configuration & Management
+
+- **Project Configuration** - Customize templates, output paths, agent selection, and preferences via `.clavix/config.json`
+- **Interactive CLI** - View current config, change settings, edit preferences, or reset to defaults
+- **Template System** - Override built-in templates with custom versions in `.clavix/templates/`
+- **Atomic File Operations** - Safe writes and updates prevent data corruption
+
+### 📚 Documentation Management
+
+- **Managed Blocks** - Auto-inject instructions with `<!-- CLAVIX:START -->` `<!-- CLAVIX:END -->` markers
+- **Update Command** - Keep slash commands and documentation synchronized across updates
+- **Safe Updates** - Preserve manual content while refreshing managed sections
+- **Migration Support** - Automatic cleanup of old command structures
+
+### 🔧 CLI Commands
+
+- `clavix init` - Initialize Clavix in your project with agent selection
+- `clavix fast <prompt>` - Quick prompt improvement with smart triage
+- `clavix deep <prompt>` - Comprehensive prompt analysis
+- `clavix prd` - Generate PRD through guided Socratic questions
+- `clavix start` - Begin conversational session for iterative development
+- `clavix summarize [session-id]` - Extract requirements from conversation
+- `clavix list` - List sessions and outputs with filtering options
+- `clavix show [session-id]` - View detailed session/output information
+- `clavix config` - Manage configuration (get/set/edit/reset)
+- `clavix update` - Update managed blocks and slash commands
+- `clavix version` - Display version information
 
 ## Installation
 
 ```bash
 npm install -g clavix
 ```
+
+**Troubleshooting:**
+- If you encounter permission errors, use `sudo npm install -g clavix` (macOS/Linux)
+- On Windows, run your terminal as Administrator
+- Verify installation with `clavix version`
 
 ## Quick Start
 

@@ -44,6 +44,7 @@
 ## Planned Features 🚀
 
 ### Agent Integrations
+- [ ] Zed IDE integration
 - [ ] Droid CLI integration
 - [ ] Generic agent adapter
 
