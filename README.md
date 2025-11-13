@@ -249,7 +249,8 @@ Display help information for all commands.
 
 ```bash
 clavix --help
-clavix improve --help
+clavix fast --help
+clavix deep --help
 ```
 
 ## Project Structure
@@ -402,10 +403,6 @@ Provides all fast mode features plus alternative phrasings, edge cases, implemen
 
 - Node.js >= 18.0.0
 - npm or yarn
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
