@@ -15,7 +15,7 @@ AI-assisted development tools produce better code when given better prompts. How
 
 ## Features
 
-### Phase 1 (MVP) - Available Now
+### Phase 1 (MVP) ✅ Complete
 
 - ✅ **Global CLI tool** - Install once, use everywhere
 - ✅ **Prompt improvement** - Analyze and enhance prompts directly
@@ -23,12 +23,13 @@ AI-assisted development tools produce better code when given better prompts. How
 - ✅ **Managed documentation** - Auto-inject into AGENTS.md and CLAUDE.md
 - ✅ **Template system** - Customizable templates for your workflow
 
-### Phase 2 (Coming Soon)
+### Phase 2 (Core Workflows) ✅ Complete
 
-- 🔜 **PRD generation** - Guided Socratic questioning workflow
-- 🔜 **Conversational mode** - Iterative prompt development
-- 🔜 **Session management** - Track and organize conversations
-- 🔜 **Analysis tools** - Extract optimized prompts from conversations
+- ✅ **PRD generation** - Guided Socratic questioning workflow
+- ✅ **Conversational mode** - Iterative prompt development
+- ✅ **Session management** - Track and organize conversations
+- ✅ **Analysis tools** - Extract optimized prompts from conversations
+- ✅ **Additional commands** - list, show, config, update
 
 ## Installation
 
@@ -66,9 +67,9 @@ Output:
 After initialization, use these commands in Claude Code:
 
 - `/clavix:improve [prompt]` - Improve a prompt
-- `/clavix:prd` - Generate a PRD (Phase 2)
-- `/clavix:start` - Start conversational mode (Phase 2)
-- `/clavix:summarize` - Analyze conversation (Phase 2)
+- `/clavix:prd` - Generate a PRD
+- `/clavix:start` - Start conversational mode
+- `/clavix:summarize` - Analyze conversation
 
 ## Commands
 
@@ -107,6 +108,100 @@ clavix improve "Build an API for user management"
   - Technical Constraints
   - Expected Output
   - Success Criteria
+
+### `clavix prd`
+
+Generate a comprehensive PRD through guided Socratic questioning.
+
+```bash
+clavix prd
+```
+
+Creates two files:
+- `full-prd.md` - Comprehensive document for team alignment
+- `quick-prd.md` - Condensed version for AI consumption
+
+### `clavix start`
+
+Enter conversational mode for iterative requirement gathering.
+
+```bash
+clavix start
+```
+
+Start a natural conversation to develop requirements. Use `/clavix:summarize` later to extract structured output.
+
+### `clavix summarize [session-id]`
+
+Analyze a conversation and extract requirements.
+
+```bash
+# Summarize current session
+clavix summarize
+
+# Summarize specific session
+clavix summarize abc-123-def
+```
+
+Generates:
+- `mini-prd.md` - Concise requirements
+- `optimized-prompt.md` - AI-ready prompt
+
+### `clavix list`
+
+List all sessions and outputs.
+
+```bash
+# List everything
+clavix list
+
+# List only sessions
+clavix list --sessions
+
+# Filter by project
+clavix list --project auth
+```
+
+### `clavix show [session-id]`
+
+Show detailed session information.
+
+```bash
+# Show most recent session
+clavix show
+
+# Show specific session with full history
+clavix show abc-123-def --full
+
+# Show output directory
+clavix show --output project-name
+```
+
+### `clavix config`
+
+Manage configuration.
+
+```bash
+# Interactive menu
+clavix config
+
+# Get/set values
+clavix config get agent
+clavix config set preferences.verboseLogging true
+```
+
+### `clavix update`
+
+Update managed blocks and slash commands.
+
+```bash
+# Update everything
+clavix update
+
+# Update specific components
+clavix update --docs-only
+clavix update --commands-only
+```
 
 ### `clavix version`
 
@@ -239,8 +334,8 @@ Claude will:
 ## Roadmap
 
 - [x] Phase 1: MVP (CLI, prompt improvement, Claude Code integration)
-- [ ] Phase 2: Core workflows (PRD generation, conversational mode, sessions)
-- [ ] Phase 3: Advanced features (team collaboration, more agents, AI-powered analysis)
+- [x] Phase 2: Core workflows (PRD generation, conversational mode, sessions, config management)
+- [ ] Phase 3: Advanced features (team collaboration, more agents, AI-powered analysis, PDF export)
 
 ## Requirements
 
