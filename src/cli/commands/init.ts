@@ -9,7 +9,7 @@ import { AgentsMdGenerator } from '../../core/adapters/agents-md-generator';
 import { OctoMdGenerator } from '../../core/adapters/octo-md-generator';
 import { FileSystem } from '../../utils/file-system';
 import { ClavixConfig, DEFAULT_CONFIG } from '../../types/config';
-import { CommandTemplate } from '../../types/agent';
+import { CommandTemplate, AgentAdapter } from '../../types/agent';
 
 export default class Init extends Command {
   static description = 'Initialize Clavix in the current project';
@@ -184,12 +184,13 @@ export default class Init extends Command {
       console.log(chalk.gray('  • Try'), chalk.cyan('/clavix:fast'), chalk.gray('for quick prompt improvements'));
       console.log(chalk.gray('  • Try'), chalk.cyan('/clavix:deep'), chalk.gray('for comprehensive prompt analysis'));
       console.log(chalk.gray('  • Use'), chalk.cyan('/clavix:prd'), chalk.gray('to generate a PRD\n'));
-    } catch (error: any) {
-      console.error(chalk.red('\n✗ Initialization failed:'), error.message);
-      if (error.hint) {
-        console.error(chalk.yellow('  Hint:'), error.hint);
+    } catch (error: unknown) {
+      const { getErrorMessage, toError } = await import('../../utils/error-utils.js');
+      console.error(chalk.red('\n✗ Initialization failed:'), getErrorMessage(error));
+      if (error && typeof error === 'object' && 'hint' in error && typeof (error as { hint: unknown }).hint === 'string') {
+        console.error(chalk.yellow('  Hint:'), (error as { hint: string }).hint);
       }
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -270,7 +271,7 @@ See documentation for template format details.
     await FileSystem.writeFileAtomic('.clavix/INSTRUCTIONS.md', instructions);
   }
 
-  private async generateSlashCommands(adapter: any): Promise<void> {
+  private async generateSlashCommands(adapter: AgentAdapter): Promise<void> {
     const templateDir = path.join(__dirname, '../../templates/slash-commands', adapter.name);
     const commandFiles = await FileSystem.listFiles(templateDir, /\.md$/);
 
@@ -290,7 +291,7 @@ See documentation for template format details.
     await adapter.generateCommands(templates);
   }
 
-  private async injectDocumentation(adapter: any): Promise<void> {
+  private async injectDocumentation(adapter: AgentAdapter): Promise<void> {
     // Inject AGENTS.md
     const agentsContent = DocInjector.getDefaultAgentsContent();
     await DocInjector.injectBlock('AGENTS.md', this.extractClavixBlock(agentsContent));
@@ -302,7 +303,7 @@ See documentation for template format details.
     }
   }
 
-  private async migrateOldCommands(_adapter: any): Promise<void> {
+  private async migrateOldCommands(_adapter: AgentAdapter): Promise<void> {
     // Check for old command structure (.claude/commands/clavix:*.md)
     const oldCommandsPath = '.claude/commands';
 

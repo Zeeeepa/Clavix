@@ -59,7 +59,7 @@ export default class Prd extends Command {
       console.log();
 
       // Collect answers through Socratic questioning
-      const answers: Record<string, any> = {};
+      const answers: Record<string, unknown> = {};
       let question = engine.getNextQuestion();
       let detectedStack: string | null = null;
       let stackDetectionDone = false;

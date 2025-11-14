@@ -2,7 +2,7 @@ import { Command, Args, Flags } from '@oclif/core';
 import chalk from 'chalk';
 import * as path from 'path';
 import { SessionManager } from '../../core/session-manager';
-import { ConversationAnalyzer } from '../../core/conversation-analyzer';
+import { ConversationAnalyzer, ConversationAnalysis } from '../../core/conversation-analyzer';
 import { FileSystem } from '../../utils/file-system';
 import { PromptOptimizer } from '../../core/prompt-optimizer';
 
@@ -158,7 +158,7 @@ export default class Summarize extends Command {
   /**
    * Display analysis summary
    */
-  private displayAnalysisSummary(analysis: any): void {
+  private displayAnalysisSummary(analysis: ConversationAnalysis): void {
     console.log(chalk.bold('Analysis Summary:'));
     console.log();
 
@@ -260,7 +260,7 @@ export default class Summarize extends Command {
       // Display CLEAR changes made
       if (clearResult.changesSummary && clearResult.changesSummary.length > 0) {
         console.log(chalk.bold.magenta('CLEAR Improvements Applied:\n'));
-        clearResult.changesSummary.slice(0, 3).forEach((change: any) => {
+        clearResult.changesSummary.slice(0, 3).forEach((change: { component: string; change: string }) => {
           console.log(chalk.magenta(`  [${change.component}] ${change.change}`));
         });
         console.log();
@@ -283,7 +283,7 @@ ${clearResult.improvedPrompt}
 
 ## Changes Applied
 
-${clearResult.changesSummary.map((c: any) => `- **[${c.component}]** ${c.change}`).join('\n')}
+${clearResult.changesSummary.map((c: { component: string; change: string }) => `- **[${c.component}]** ${c.change}`).join('\n')}
 `;
 
       await FileSystem.writeFileAtomic(clearOptimizedPath, clearOptimizedContent);

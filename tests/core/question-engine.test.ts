@@ -397,10 +397,10 @@ Test completion
 
       expect(flow.name).toBe('PRD Question Flow');
       expect(flow.description).toContain('Product Requirements Document');
-      expect(flow.questions.length).toBe(8);
+      expect(flow.questions.length).toBe(5);
 
       // Verify first question
-      expect(flow.questions[0].text).toContain('What problem are you solving');
+      expect(flow.questions[0].text).toContain('What are we building and why');
       expect(flow.questions[0].type).toBe('text');
       expect(flow.questions[0].required).toBe(true);
 

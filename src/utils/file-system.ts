@@ -26,7 +26,7 @@ export class FileSystem {
       if (await fs.pathExists(backupPath)) {
         await fs.remove(backupPath);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Restore backup if write failed
       if (await fs.pathExists(backupPath)) {
         try {
@@ -40,14 +40,15 @@ export class FileSystem {
         }
       }
 
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot write to ${filePath}`,
           'Try running with appropriate permissions or check file ownership'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -63,15 +64,16 @@ export class FileSystem {
       }
 
       return await fs.readFile(fullPath, 'utf-8');
-    } catch (error: any) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+    } catch (error: unknown) {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot read ${filePath}`,
           'Check file permissions'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -83,15 +85,16 @@ export class FileSystem {
 
     try {
       await fs.ensureDir(fullPath);
-    } catch (error: any) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+    } catch (error: unknown) {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot create directory ${dirPath}`,
           'Check parent directory permissions'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -186,15 +189,16 @@ export class FileSystem {
       }
 
       return files;
-    } catch (error: any) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+    } catch (error: unknown) {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot read directory ${dirPath}`,
           'Check directory permissions'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -207,15 +211,16 @@ export class FileSystem {
 
     try {
       await fs.copy(srcPath, destPath);
-    } catch (error: any) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+    } catch (error: unknown) {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot copy from ${src} to ${dest}`,
           'Check file permissions'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 
@@ -229,15 +234,16 @@ export class FileSystem {
       if (await fs.pathExists(fullPath)) {
         await fs.remove(fullPath);
       }
-    } catch (error: any) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+    } catch (error: unknown) {
+      const { isNodeError, toError } = await import('./error-utils.js');
+      if (isNodeError(error) && (error.code === 'EACCES' || error.code === 'EPERM')) {
         throw new PermissionError(
           `Permission denied: Cannot remove ${filePath}`,
           'Check file permissions'
         );
       }
 
-      throw error;
+      throw toError(error);
     }
   }
 }

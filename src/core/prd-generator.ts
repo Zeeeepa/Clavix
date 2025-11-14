@@ -55,7 +55,7 @@ export class PrdGenerator {
    * @returns Path to the output directory
    */
   async generate(
-    answers: Record<string, any>,
+    answers: Record<string, unknown>,
     options: PrdGenerationOptions = {}
   ): Promise<string> {
     const projectName = options.projectName || this.extractProjectName(answers);
@@ -96,7 +96,7 @@ export class PrdGenerator {
    *
    * Tries to infer a project name from the problem statement or user responses
    */
-  extractProjectName(answers: Record<string, any>): string {
+  extractProjectName(answers: Record<string, unknown>): string {
     // Try to find a project name in the answers
     // Look in common question answers like "problem", "name", "title"
     const possibleNameFields = ['projectName', 'name', 'title', 'q1', 'problem'];
@@ -147,8 +147,8 @@ export class PrdGenerator {
   /**
    * Prepare answers for template rendering
    */
-  private prepareAnswersForTemplate(answers: Record<string, any>): Record<string, any> {
-    const prepared: Record<string, any> = {};
+  private prepareAnswersForTemplate(answers: Record<string, unknown>): Record<string, unknown> {
+    const prepared: Record<string, unknown> = {};
 
     // Map question IDs to friendly names (updated for CLEAR-optimized 5-question flow)
     const questionMap: Record<string, string> = {
@@ -170,7 +170,7 @@ export class PrdGenerator {
   /**
    * Generate full PRD document
    */
-  private async generateFullPrd(data: any, outputPath: string): Promise<void> {
+  private async generateFullPrd(data: Record<string, unknown>, outputPath: string): Promise<void> {
     const templatePath = path.join(this.templatesDir, 'full-prd-template.hbs');
 
     // Check if custom template exists
@@ -189,7 +189,7 @@ export class PrdGenerator {
   /**
    * Generate quick PRD document
    */
-  private async generateQuickPrd(data: any, outputPath: string): Promise<void> {
+  private async generateQuickPrd(data: Record<string, unknown>, outputPath: string): Promise<void> {
     const templatePath = path.join(this.templatesDir, 'quick-prd-template.hbs');
 
     // Check if custom template exists

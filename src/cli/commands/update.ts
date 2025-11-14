@@ -7,6 +7,7 @@ import { DocInjector } from '../../core/doc-injector';
 import { AgentManager } from '../../core/agent-manager';
 import { AgentsMdGenerator } from '../../core/adapters/agents-md-generator';
 import { OctoMdGenerator } from '../../core/adapters/octo-md-generator';
+import { AgentAdapter } from '../../types/agent';
 
 export default class Update extends Command {
   static description = 'Update managed blocks and slash commands';
@@ -112,7 +113,7 @@ export default class Update extends Command {
     }
   }
 
-  private async updateDocumentation(adapter: any, agentType: string, force: boolean): Promise<number> {
+  private async updateDocumentation(_adapter: AgentAdapter, agentType: string, force: boolean): Promise<number> {
     this.log(chalk.cyan('📝 Updating documentation blocks...'));
 
     let updated = 0;
@@ -159,7 +160,7 @@ export default class Update extends Command {
     return updated;
   }
 
-  private async updateCommands(adapter: any, force: boolean): Promise<number> {
+  private async updateCommands(adapter: AgentAdapter, force: boolean): Promise<number> {
     this.log(chalk.cyan('\n🔧 Updating slash commands...'));
 
     const commandsDir = adapter.getCommandPath();
@@ -282,28 +283,30 @@ Analyze the current conversation and extract key requirements into a structured 
     return currentContent.includes(newContent.trim());
   }
 
-  private async updateAgentsMd(force: boolean): Promise<number> {
+  private async updateAgentsMd(_force: boolean): Promise<number> {
     this.log(chalk.cyan('📝 Updating AGENTS.md...'));
 
     try {
       await AgentsMdGenerator.generate();
       this.log(chalk.gray('  ✓ Updated AGENTS.md'));
       return 1;
-    } catch (error: any) {
-      this.log(chalk.yellow(`  ⚠ Failed to update AGENTS.md: ${error.message}`));
+    } catch (error: unknown) {
+      const { getErrorMessage } = await import('../../utils/error-utils.js');
+      this.log(chalk.yellow(`  ⚠ Failed to update AGENTS.md: ${getErrorMessage(error)}`));
       return 0;
     }
   }
 
-  private async updateOctoMd(force: boolean): Promise<number> {
+  private async updateOctoMd(_force: boolean): Promise<number> {
     this.log(chalk.cyan('📝 Updating OCTO.md...'));
 
     try {
       await OctoMdGenerator.generate();
       this.log(chalk.gray('  ✓ Updated OCTO.md'));
       return 1;
-    } catch (error: any) {
-      this.log(chalk.yellow(`  ⚠ Failed to update OCTO.md: ${error.message}`));
+    } catch (error: unknown) {
+      const { getErrorMessage } = await import('../../utils/error-utils.js');
+      this.log(chalk.yellow(`  ⚠ Failed to update OCTO.md: ${getErrorMessage(error)}`));
       return 0;
     }
   }

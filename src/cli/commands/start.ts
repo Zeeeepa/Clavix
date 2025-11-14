@@ -1,4 +1,4 @@
-import { Command, Flags } from '@oclif/core';
+import { Command, Flags, Config } from '@oclif/core';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import * as path from 'path';
@@ -33,7 +33,7 @@ export default class Start extends Command {
   private sessionId: string | null = null;
   private isExiting = false;
 
-  constructor(argv: string[], config: any) {
+  constructor(argv: string[], config: Config) {
     super(argv, config);
     this.sessionManager = new SessionManager();
   }
@@ -147,7 +147,7 @@ export default class Start extends Command {
         console.log(); // Add spacing
       } catch (error) {
         // Handle Ctrl+C or other interrupts
-        if ((error as any).isTtyError || (error as any).message?.includes('User force closed')) {
+        if ((error as { isTtyError?: boolean; message?: string }).isTtyError || (error as { isTtyError?: boolean; message?: string }).message?.includes('User force closed')) {
           break;
         }
         throw error;

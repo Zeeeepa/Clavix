@@ -76,12 +76,13 @@ export function migrateConfig(legacy: LegacyConfig): ClavixConfig {
 /**
  * Check if config is legacy format
  */
-export function isLegacyConfig(config: any): config is LegacyConfig {
+export function isLegacyConfig(config: unknown): config is LegacyConfig {
   return (
-    config &&
+    config !== null &&
+    config !== undefined &&
     typeof config === 'object' &&
     'agent' in config &&
-    typeof config.agent === 'string' &&
+    typeof (config as { agent: unknown }).agent === 'string' &&
     !('providers' in config)
   );
 }

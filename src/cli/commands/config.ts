@@ -22,7 +22,7 @@ interface ClavixConfig {
     verboseLogging?: boolean;
     preserveSessions?: boolean;
   };
-  experimental?: Record<string, any>;
+  experimental?: Record<string, unknown>;
 }
 
 export default class Config extends Command {
@@ -151,7 +151,7 @@ export default class Config extends Command {
       return;
     }
 
-    const value = this.getNestedValue(config, key);
+    const value = this.getNestedValue(config as unknown as Record<string, unknown>, key);
 
     if (value === undefined) {
       this.error(chalk.red(`Configuration key "${key}" not found`));
@@ -168,14 +168,14 @@ export default class Config extends Command {
     const config = this.loadConfig(configPath);
 
     // Parse value as JSON if possible
-    let parsedValue: any;
+    let parsedValue: unknown;
     try {
       parsedValue = JSON.parse(value);
     } catch {
       parsedValue = value;
     }
 
-    this.setNestedValue(config, key, parsedValue);
+    this.setNestedValue(config as unknown as Record<string, unknown>, key, parsedValue);
     this.saveConfig(configPath, config);
 
     this.log(chalk.green(`✅ Set ${chalk.cyan(key)} to ${JSON.stringify(parsedValue)}`));
@@ -307,16 +307,21 @@ export default class Config extends Command {
     this.log('');
   }
 
-  private getNestedValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
+  private getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+    return path.split('.').reduce((current: unknown, key: string) => {
+      if (current && typeof current === 'object' && key in current) {
+        return (current as Record<string, unknown>)[key];
+      }
+      return undefined;
+    }, obj as unknown);
   }
 
-  private setNestedValue(obj: any, path: string, value: any): void {
+  private setNestedValue(obj: Record<string, unknown>, path: string, value: unknown): void {
     const keys = path.split('.');
     const lastKey = keys.pop()!;
-    const target = keys.reduce((current, key) => {
+    const target = keys.reduce((current: Record<string, unknown>, key: string) => {
       if (!current[key]) current[key] = {};
-      return current[key];
+      return current[key] as Record<string, unknown>;
     }, obj);
     target[lastKey] = value;
   }

@@ -63,8 +63,9 @@ export default class Archive extends Command {
 
       // Interactive mode
       await this.interactiveArchive(archiveManager);
-    } catch (error: any) {
-      this.error(chalk.red(`Archive failed: ${error.message}`));
+    } catch (error: unknown) {
+      const { getErrorMessage } = await import('../../utils/error-utils.js');
+      this.error(chalk.red(`Archive failed: ${getErrorMessage(error)}`));
     }
   }
 
@@ -87,7 +88,8 @@ export default class Archive extends Command {
     // Show archivable projects
     this.log(chalk.green(`Found ${archivableProjects.length} project(s) ready to archive:\n`));
 
-    const choices: any[] = archivableProjects.map((project) => ({
+    // Inquirer choices can be mixed types (choices + separators)
+    const choices: unknown[] = archivableProjects.map((project) => ({
       name: `${project.name} (${project.taskStatus.completed} tasks completed)`,
       value: project.name,
       short: project.name,

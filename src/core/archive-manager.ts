@@ -187,7 +187,7 @@ export class ArchiveManager {
         percentage: stats.percentage,
         allCompleted: stats.remaining === 0 && stats.total > 0,
       };
-    } catch (error) {
+    } catch {
       // If parsing fails, return error status
       return {
         hasTasksFile: true,
@@ -269,10 +269,11 @@ export class ArchiveManager {
         success: true,
         message: `Successfully archived ${projectName} to ${destPath}`,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const { getErrorMessage } = await import('../utils/error-utils.js');
       return {
         success: false,
-        message: `Failed to archive project: ${error.message}`,
+        message: `Failed to archive project: ${getErrorMessage(error)}`,
       };
     }
   }
@@ -313,10 +314,11 @@ export class ArchiveManager {
         success: true,
         message: `Successfully restored ${projectName} to ${destPath}`,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const { getErrorMessage } = await import('../utils/error-utils.js');
       return {
         success: false,
-        message: `Failed to restore project: ${error.message}`,
+        message: `Failed to restore project: ${getErrorMessage(error)}`,
       };
     }
   }

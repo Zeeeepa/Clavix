@@ -1,7 +1,7 @@
 import { Command, Args, Flags } from '@oclif/core';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { PromptOptimizer } from '../../core/prompt-optimizer';
+import { PromptOptimizer, CLEARResult, ImprovedPrompt, CLEARScore } from '../../core/prompt-optimizer';
 
 export default class Fast extends Command {
   static description = 'Quickly improve a prompt using CLEAR framework (Concise, Logical, Explicit) with smart triage';
@@ -114,7 +114,7 @@ export default class Fast extends Command {
     this.displayFastModeOutput(result, clearResult, clearScore);
   }
 
-  private displayFastModeOutput(result: any, clearResult: any, clearScore: any): void {
+  private displayFastModeOutput(result: ImprovedPrompt, clearResult: CLEARResult, clearScore: CLEARScore): void {
     console.log(chalk.bold.cyan('🎯 CLEAR Analysis (Fast Mode)\n'));
 
     // Display CLEAR Assessment
@@ -175,7 +175,7 @@ export default class Fast extends Command {
     // Changes made (CLEAR-labeled)
     if (clearResult.changesSummary.length > 0) {
       console.log(chalk.bold.magenta('📝 CLEAR Changes Made:\n'));
-      clearResult.changesSummary.forEach((change: any) => {
+      clearResult.changesSummary.forEach((change: { component: string; change: string }) => {
         const label = chalk.bold(`[${change.component}]`);
         console.log(chalk.magenta(`  ${label} ${change.change}`));
       });
@@ -185,7 +185,7 @@ export default class Fast extends Command {
     console.log(chalk.gray('💡 Tip: Copy the CLEAR-optimized prompt above and use it with your AI agent\n'));
   }
 
-  private displayDeepModeOutput(result: any, clearResult: any, clearScore: any): void {
+  private displayDeepModeOutput(result: ImprovedPrompt, clearResult: CLEARResult, clearScore: CLEARScore): void {
     console.log(chalk.bold.cyan('🎯 CLEAR Framework Deep Analysis\n'));
 
     // Display CLEAR Assessment (all 5 components for deep mode)
@@ -242,7 +242,7 @@ export default class Fast extends Command {
     // Changes made
     if (clearResult.changesSummary.length > 0) {
       console.log(chalk.bold.magenta('📝 CLEAR Changes Made:\n'));
-      clearResult.changesSummary.forEach((change: any) => {
+      clearResult.changesSummary.forEach((change: { component: string; change: string }) => {
         console.log(chalk.magenta(`  [${change.component}] ${change.change}`));
       });
       console.log();
@@ -262,7 +262,7 @@ export default class Fast extends Command {
 
       if (clearResult.adaptiveness.alternativeStructures.length > 0) {
         console.log(chalk.cyan('  Alternative Structures:'));
-        clearResult.adaptiveness.alternativeStructures.forEach((alt: any, i: number) => {
+        clearResult.adaptiveness.alternativeStructures.forEach((alt: { name: string; structure: string; benefits: string }, i: number) => {
           console.log(chalk.cyan(`    ${i + 1}. ${alt.name}`));
           console.log(chalk.gray(`       ${alt.benefits}`));
         });
@@ -315,7 +315,7 @@ export default class Fast extends Command {
     console.log(chalk.gray('💡 Full CLEAR framework analysis complete!\n'));
   }
 
-  private displayCLEAROnlyAnalysis(clearResult: any, clearScore: any): void {
+  private displayCLEAROnlyAnalysis(clearResult: CLEARResult, clearScore: CLEARScore): void {
     console.log(chalk.bold.cyan('🎯 CLEAR Framework Analysis Only\n'));
 
     const getScoreColor = (score: number) => {
