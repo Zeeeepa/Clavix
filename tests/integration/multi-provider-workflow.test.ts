@@ -27,12 +27,13 @@ describe('Multi-Provider Workflow Integration', () => {
     it('should register all built-in adapters', () => {
       const adapters = agentManager.getAdapters();
 
-      expect(adapters).toHaveLength(5);
+      expect(adapters).toHaveLength(6);
       expect(agentManager.hasAgent('claude-code')).toBe(true);
       expect(agentManager.hasAgent('cursor')).toBe(true);
       expect(agentManager.hasAgent('droid')).toBe(true);
       expect(agentManager.hasAgent('opencode')).toBe(true);
       expect(agentManager.hasAgent('amp')).toBe(true);
+      expect(agentManager.hasAgent('crush')).toBe(true);
     });
 
     it('should provide list of available agents', () => {
@@ -43,6 +44,7 @@ describe('Multi-Provider Workflow Integration', () => {
       expect(available).toContain('droid');
       expect(available).toContain('opencode');
       expect(available).toContain('amp');
+      expect(available).toContain('crush');
     });
 
     it('should get adapter by name', () => {
@@ -107,10 +109,11 @@ describe('Multi-Provider Workflow Integration', () => {
       await fs.ensureDir('.factory');
       await fs.ensureDir('.opencode');
       await fs.ensureDir('.agents');
+      await fs.ensureDir('.crush');
 
       const detected = await agentManager.detectAgents();
 
-      expect(detected).toHaveLength(5);
+      expect(detected).toHaveLength(6);
     });
   });
 
@@ -329,7 +332,7 @@ describe('Multi-Provider Workflow Integration', () => {
     it('should provide formatted choices for prompts', () => {
       const choices = agentManager.getAdapterChoices();
 
-      expect(choices).toHaveLength(5);
+      expect(choices).toHaveLength(6);
       expect(choices[0].name).toContain('Claude Code');
       expect(choices[0].value).toBe('claude-code');
     });

@@ -72,11 +72,14 @@ Lo, L. S. (2023). "The CLEAR Path: A Framework for Enhancing Information Literac
 | **Droid CLI** | ✅ | `.factory/commands/` | Fully Supported |
 | **OpenCode** | ✅ | `.opencode/command/` | Fully Supported |
 | **Amp** | ✅ | `.agents/commands/` | Fully Supported |
+| **Crush CLI** | ✅ | `.crush/commands/clavix/` | Fully Supported |
 | **Universal (agents.md)** | ⚡ No slash commands | `AGENTS.md` | Fully Supported |
 
 **Features:**
 - **Multi-Select Support** - Choose multiple tools during `clavix init` (Space to select, Enter to confirm)
 - **Provider-Specific Formatting** - Automatically generates commands in each tool's native format
+  - Crush CLI uses `$PROMPT` placeholder (vs generic `{{ARGS}}`)
+  - Commands accessible via Ctrl+P or `/` in Crush terminal
 - **Universal Fallback** - `agents.md` provides workflow instructions for tools without slash command support
 - **Slash Commands** - `/clavix:fast`, `/clavix:deep`, `/clavix:prd`, `/clavix:plan`, `/clavix:implement`, `/clavix:archive`, `/clavix:start`, `/clavix:summarize` available in all supported tools
 - **Managed Documentation** - Auto-inject and update instructions in `AGENTS.md` and `CLAUDE.md` with safe managed blocks

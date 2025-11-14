@@ -36,15 +36,27 @@ export abstract class BaseAdapter implements AgentAdapter {
     // Check if parent directory exists
     const parentDir = path.dirname(commandPath);
     if (!(await FileSystem.exists(parentDir))) {
-      // Check if we can create parent
-      const grandParent = path.dirname(parentDir);
-      if (!(await FileSystem.exists(grandParent))) {
-        errors.push(
-          `Parent directory ${parentDir} does not exist and cannot be created`
-        );
-      } else {
+      // Check if we can create parent by finding first existing ancestor
+      let ancestorDir = parentDir;
+      let canCreate = false;
+
+      // Walk up the directory tree until we find an existing directory
+      while (ancestorDir !== '.' && ancestorDir !== '/' && ancestorDir.length > 0) {
+        ancestorDir = path.dirname(ancestorDir);
+        if (await FileSystem.exists(ancestorDir)) {
+          canCreate = true;
+          break;
+        }
+      }
+
+      // If we reached '.' or '/', it means we can create the directory
+      if (ancestorDir === '.' || ancestorDir === '/' || canCreate) {
         warnings.push(
           `Parent directory ${parentDir} will be created`
+        );
+      } else {
+        errors.push(
+          `Parent directory ${parentDir} does not exist and cannot be created`
         );
       }
     }

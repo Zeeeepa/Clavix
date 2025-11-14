@@ -5,6 +5,106 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2025-11-14
+
+### 🎉 New Features
+
+#### Crush CLI Support
+- **Added**: Full Crush CLI adapter with slash command support
+  - **Reference**: [Crush CLI COMMANDS.md](https://github.com/charmbracelet/crush/blob/main/COMMANDS.md)
+  - **Directory**: `.crush/commands/clavix/` (subdirectory support)
+  - **Placeholder**: `$PROMPT` (Crush-specific syntax automatically converted from `{{ARGS}}`)
+  - **Command Access**: Via Ctrl+P or `/` in Crush terminal
+  - **Command IDs**: `project:clavix:fast`, `project:clavix:deep`, `project:clavix:prd`, etc.
+
+### 📊 Supported Providers
+**Now 6 adapters**: claude-code, cursor, droid, opencode, amp, **crush**
+
+### 🛠️ Technical Implementation
+
+#### New Files
+- `src/core/adapters/crush-adapter.ts` - Crush CLI adapter implementation
+- `src/templates/slash-commands/crush/` - Command templates (8 files)
+- `tests/adapters/crush-adapter.test.ts` - Comprehensive test suite (34 tests)
+
+#### Updated Files
+- `src/core/agent-manager.ts` - Registered CrushAdapter
+- `src/cli/commands/init.ts` - Added Crush to provider selection
+- `tests/integration/multi-provider-workflow.test.ts` - Added Crush to integration tests
+
+#### Key Features
+- **Subdirectory Support**: Commands in `.crush/commands/clavix/` (like Claude Code)
+- **Automatic Placeholder Conversion**: `{{ARGS}}` → `$PROMPT` via `formatCommand()`
+- **No Frontmatter**: Uses simple markdown format
+- **Project Detection**: Checks for `.crush` directory
+
+### 🧪 Testing
+
+#### Test Coverage
+- **Unit Tests**: 34 tests in `crush-adapter.test.ts`
+  - Adapter properties validation
+  - Project detection (`.crush` directory)
+  - Command generation in subdirectory structure
+  - `$PROMPT` placeholder replacement (single & multiple occurrences)
+  - `formatCommand()` method testing
+  - Edge cases (unicode, code blocks, long content, empty content)
+  - Validation flow
+  - BaseAdapter integration
+
+- **Integration Tests**: Updated `multi-provider-workflow.test.ts`
+  - Adapter registration (5→6 adapters)
+  - Multi-provider detection
+  - Adapter choices for UI
+
+#### Test Results
+- **Total**: 1,273 tests (1,239 existing + 34 new)
+- **Status**: All passing
+- **Coverage**: 100% for CrushAdapter
+- **Regression**: Zero impact on existing 5 adapters
+
+### 📚 Documentation
+- **README.md**: Added Crush to supported tools table with $PROMPT note
+- **CHANGELOG.md**: This entry
+
+### 🎯 Usage
+
+#### Initialization
+```bash
+clavix init
+# Select "Crush CLI (.crush/commands/clavix/)"
+```
+
+#### Generated Structure
+```
+.crush/
+  └── commands/
+      └── clavix/
+          ├── fast.md          ($PROMPT syntax)
+          ├── deep.md          ($PROMPT syntax)
+          ├── prd.md           ($PROMPT syntax)
+          ├── start.md         ($PROMPT syntax)
+          ├── summarize.md     ($PROMPT syntax)
+          ├── plan.md          ($PROMPT syntax)
+          ├── implement.md     ($PROMPT syntax)
+          └── archive.md       ($PROMPT syntax)
+```
+
+#### In Crush Terminal
+- Press `/` or `Ctrl+P` to access command palette
+- Select commands: `project:clavix:fast`, `project:clavix:deep`, etc.
+- Crush will prompt for `$PROMPT` input when command is invoked
+
+### ⚡ Migration Notes
+**Existing Users**: No action required. This is a purely additive feature.
+
+**New Crush Users**:
+1. Ensure Crush CLI is installed
+2. Run `clavix init` in your project
+3. Select "Crush CLI" from provider list
+4. Access commands via Ctrl+P in Crush
+
+---
+
 ## [1.5.2] - 2025-11-14
 
 ### 🐛 Critical Fixes

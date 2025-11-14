@@ -72,6 +72,10 @@ export default class Init extends Command {
               name: 'Amp (.agents/commands/)',
               value: 'amp',
             },
+            {
+              name: 'Crush CLI (.crush/commands/clavix/)',
+              value: 'crush',
+            },
             new inquirer.Separator(),
             {
               name: 'agents.md (Universal - for tools without slash commands)',
@@ -82,6 +86,7 @@ export default class Init extends Command {
               name: 'Octofriend (OCTO.md - optimized for Octofriend)',
               value: 'octo-md',
             },
+            new inquirer.Separator(),
           ],
           validate: (answer: string[]) => {
             if (answer.length === 0) {

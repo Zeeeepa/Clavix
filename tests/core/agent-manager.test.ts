@@ -25,12 +25,13 @@ describe('AgentManager', () => {
       expect(adapterNames).toContain('droid');
       expect(adapterNames).toContain('opencode');
       expect(adapterNames).toContain('amp');
+      expect(adapterNames).toContain('crush');
     });
 
-    it('should have exactly 5 built-in adapters', () => {
+    it('should have exactly 6 built-in adapters', () => {
       const adapters = manager.getAdapters();
 
-      expect(adapters.length).toBe(5);
+      expect(adapters.length).toBe(6);
     });
   });
 

@@ -4,6 +4,7 @@ import { CursorAdapter } from './adapters/cursor-adapter';
 import { DroidAdapter } from './adapters/droid-adapter';
 import { OpenCodeAdapter } from './adapters/opencode-adapter';
 import { AmpAdapter } from './adapters/amp-adapter';
+import { CrushAdapter } from './adapters/crush-adapter';
 import { IntegrationError } from '../types/errors';
 
 /**
@@ -19,6 +20,7 @@ export class AgentManager {
     this.registerAdapter(new DroidAdapter());
     this.registerAdapter(new OpenCodeAdapter());
     this.registerAdapter(new AmpAdapter());
+    this.registerAdapter(new CrushAdapter());
   }
 
   /**
